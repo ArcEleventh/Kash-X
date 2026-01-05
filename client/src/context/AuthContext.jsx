@@ -1,6 +1,9 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
+// Configure API base URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -40,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (phoneNumber, otp) => {
         try {
-            const response = await axios.post('/api/auth/verify-otp', {
+            const response = await axios.post(`${API_BASE_URL}/auth/verify-otp`, {
                 phoneNumber,
                 otp
             });

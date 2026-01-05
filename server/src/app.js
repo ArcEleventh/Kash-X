@@ -20,7 +20,10 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5432,
 });
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: true
+}));
 app.use(express.json());
 
 // Routes
