@@ -1,23 +1,12 @@
 {
-    "buildCommand": "npm run build",
+    "framework": "vite",
+    "buildCommand": "cd client && npm install && npm run build",
     "outputDirectory": "client/dist",
+    "installCommand": "npm install",
     "rewrites": [
         {
-            "source": "/api/(.*)",
+            "source": "/api/:path*",
             "destination": "/api/index.js"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/api/index.js"
-        },
-        {
-            "handle": "filesystem"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/index.html"
         }
     ]
 }
