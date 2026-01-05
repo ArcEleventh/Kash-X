@@ -1,0 +1,20 @@
+{
+    "name": "kash-x-monorepo",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "cd client && npm install && npm run build",
+        "postinstall": "cd client && npm install"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "jsonwebtoken": "^9.0.2",
+        "pg": "^8.11.3",
+        "stellar-sdk": "^11.0.1",
+        "enc-utils": "^3.0.0"
+    },
+    "engines": {
+        "node": "18.x"
+    }
+}
