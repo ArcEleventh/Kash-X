@@ -1,12 +1,23 @@
 {
+    "buildCommand": "npm run build",
+    "outputDirectory": "client/dist",
     "rewrites": [
         {
             "source": "/api/(.*)",
             "destination": "/api/index.js"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "/api/index.js"
         },
         {
-            "source": "/((?!api/|.*\\..*).*)",
-            "destination": "/index.html"
+            "handle": "filesystem"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
         }
     ]
 }
