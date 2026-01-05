@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kash X - Preview</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#6366f1',
+                            dark: '#4f46e5',
+                            light: '#818cf8',
+                        },
+                        background: '#0f172a',
+                        surface: '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- React & ReactDOM (CDN) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel (CDN) for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-background text-white antialiased">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- Mock Components mimicking the actual App ---
+
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+
+        // Icons placeholder (Lucide CDN injects SVG, so we use a simple wrapper or just text for simplicity, 
+        // actually lucide.createIcons() runs on DOM, for React comp we need a wrapper)
+        const Icon = ({ name }) => <i data-lucide={name}></i>;
+
+        const Login = ({ onLogin }) => {
+            const [step, setStep] = useState('phone');
+            const [loading, setLoading] = useState(false);
+
+            const handleSend = (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setTimeout(() => { setStep('otp'); setLoading(false); }, 1000);
+            };
+
+            const handleVerify = (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setTimeout(() => { onLogin(); setLoading(false); }, 1000);
+            };
+
+            return (
+                <div className="min-h-screen flex items-center justify-center p-4">
+                    <div className="w-full max-w-md bg-surface/80 p-8 rounded-2xl border border-white/10">
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-light to-primary-dark bg-clip-text text-transparent mb-8 text-center">Kash X</h1>
+                        {step === 'phone' ? (
+                            <form onSubmit={handleSend} className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">Phone Number</label>
+                                    <input type="tel" placeholder="+256..." className="w-full bg-background/50 border border-white/10 rounded-lg p-3 text-white" defaultValue="+256" required />
+                                </div>
+                                <button disabled={loading} className="w-full bg-primary p-3 rounded-lg font-bold">{loading ? 'Sending...' : 'Continue'}</button>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleVerify} className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">OTP</label>
+                                    <input type="text" placeholder="123456" className="w-full bg-background/50 border border-white/10 rounded-lg p-3 text-white" defaultValue="123456" required />
+                                </div>
+                                <button disabled={loading} className="w-full bg-primary p-3 rounded-lg font-bold">{loading ? 'Verifying...' : 'Login'}</button>
+                            </form>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const Dashboard = () => {
+            const assets = [
+                { code: 'XLM', balance: '100.50', valueUsd: '12.06', color: 'bg-slate-600' },
+                { code: 'UGXT', balance: '50000', valueUsd: '13.50', color: 'bg-yellow-600' },
+                { code: 'KEST', balance: '2000', valueUsd: '15.20', color: 'bg-green-600' },
+                { code: 'USDT', balance: '10.00', valueUsd: '10.00', color: 'bg-blue-600' },
+            ];
+
+            return (
+                <div className="space-y-8">
+                    <div>
+                        <h2 className="text-3xl font-bold mb-2">My Portfolio</h2>
+                        <p className="text-slate-400">Stellar Testnet</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {assets.map(a => (
+                            <div key={a.code} className="bg-surface/50 p-5 rounded-xl border border-white/5">
+                                <div className="flex justify-between items-center mb-4">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${a.color} font-bold`}>{a.code[0]}</div>
+                                    <span className="text-slate-400 text-sm">{a.code}</span>
+                                </div>
+                                <h3 className="text-2xl font-bold">{a.balance}</h3>
+                                <p className="text-sm text-slate-400">≈ ${a.valueUsd}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="bg-surface/30 p-6 rounded-2xl border border-white/5">
+                        <h3 className="text-xl font-bold mb-4">Quick Actions</h3>
+                        <div className="flex gap-4">
+                            <button className="bg-surface hover:bg-surface/80 p-4 rounded-xl flex-1 border border-white/10">Deposit</button>
+                            <button className="bg-surface hover:bg-surface/80 p-4 rounded-xl flex-1 border border-white/10">Withdraw</button>
+                            <button className="bg-surface hover:bg-surface/80 p-4 rounded-xl flex-1 border border-white/10">Swap</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [user, setUser] = useState(null);
+
+            useEffect(() => {
+                lucide.createIcons();
+            });
+
+            if (!user) return <Login onLogin={() => setUser({ name: 'Demo User' })} />;
+
+            return (
+                <div className="flex h-screen bg-background">
+                    <aside className="w-64 bg-surface/50 border-r border-white/5 p-6 hidden md:block">
+                        <h1 className="text-2xl font-bold text-primary-light mb-8">Kash X</h1>
+                        <nav className="space-y-2">
+                            <div className="bg-primary/20 text-primary-light p-3 rounded-lg font-medium cursor-pointer">Dashboard</div>
+                            <div className="text-slate-400 hover:text-white p-3 cursor-pointer">Send</div>
+                            <div className="text-slate-400 hover:text-white p-3 cursor-pointer">Convert</div>
+                            <div className="text-slate-400 hover:text-white p-3 cursor-pointer">On-Ramp</div>
+                            <div className="text-slate-400 hover:text-white p-3 cursor-pointer">Off-Ramp</div>
+                        </nav>
+                    </aside>
+                    <main className="flex-1 p-8 overflow-y-auto">
+                        <Dashboard />
+                    </main>
+                </div>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

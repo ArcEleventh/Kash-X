@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  phone_number VARCHAR(20) UNIQUE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS wallets (
+  user_id INTEGER PRIMARY KEY REFERENCES users(id),
+  public_key VARCHAR(56) NOT NULL,
+  encrypted_secret_key TEXT NOT NULL,
+  salt VARCHAR(64) NOT NULL,
+  iv VARCHAR(64) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS assets (
+  code VARCHAR(12) NOT NULL,
+  issuer VARCHAR(56) NOT NULL,
+  image_url TEXT,
+  PRIMARY KEY (code, issuer)
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  type VARCHAR(20) NOT NULL CHECK (type IN ('send', 'convert', 'onramp', 'offramp')),
+  asset_code VARCHAR(12) NOT NULL,
+  amount DECIMAL(20, 7) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  tx_hash VARCHAR(66),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS otp_sessions (
+  phone_number VARCHAR(20) PRIMARY KEY,
+  otp VARCHAR(6) NOT NULL,
+  expires_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
