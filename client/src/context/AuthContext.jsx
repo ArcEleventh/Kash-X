@@ -29,29 +29,31 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (phoneNumber, otp) => {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 800));
+        console.log("Attempting login with", phoneNumber, otp);
 
-        // Mock Verification
-        // Accept any OTP for PoC to prevent "Invalid OTP" errors during demo
-        if (otp && otp.trim().length > 0) {
+        try {
+            // DIRECT LOCAL LOGIN - NO DELAY
             const mockUser = {
-                id: 'user_12345',
-                phoneNumber: phoneNumber,
-                name: 'Test User'
+                id: 'user_po_concept',
+                phoneNumber: phoneNumber || '+000000000',
+                name: 'Demo User'
             };
 
             const mockToken = 'mock_jwt_token_' + Date.now();
 
+            console.log("Setting localStorage...");
             localStorage.setItem('token', mockToken);
             localStorage.setItem('user', JSON.stringify(mockUser));
 
+            console.log("Setting state...");
             setToken(mockToken);
             setUser(mockUser);
 
+            console.log("Login successful, returning true");
             return true;
-        } else {
-            throw new Error('Please enter an OTP');
+        } catch (e) {
+            console.error("Login Error in Context:", e);
+            throw e;
         }
     };
 

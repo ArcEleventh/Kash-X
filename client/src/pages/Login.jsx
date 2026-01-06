@@ -132,8 +132,28 @@ const Login = () => {
                         </button>
                     </form>
                 )}
-                <div className="mt-8 text-center text-xs text-slate-600 font-mono">
-                    v1.2 (Client-Side Fix)
+                <div className="mt-4 pt-4 border-t border-white/10">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            localStorage.setItem('token', 'BYPASS_TOKEN');
+                            localStorage.setItem('user', JSON.stringify({ name: 'Bypass User' }));
+                            window.location.href = '/';
+                        }}
+                        className="w-full bg-slate-700 hover:bg-slate-600 text-white text-sm py-2 rounded-lg transition-colors mb-4"
+                    >
+                        ⚠️ EMERGENCY BYPASS LOGIN
+                    </button>
+
+                    <div className="p-2 bg-black/50 rounded text-[10px] font-mono text-slate-400 break-all">
+                        <p>Debug Status:</p>
+                        <p>LS Token: {localStorage.getItem('token') ? 'Present' : 'Missing'}</p>
+                        <p>Step: {step}</p>
+                    </div>
+                </div>
+
+                <div className="mt-4 text-center text-xs text-slate-600 font-mono">
+                    v1.3 DEBUG (Brave Fix)
                 </div>
             </div>
         </div>
