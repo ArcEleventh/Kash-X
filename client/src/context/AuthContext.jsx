@@ -33,7 +33,8 @@ export const AuthProvider = ({ children }) => {
         await new Promise(resolve => setTimeout(resolve, 800));
 
         // Mock Verification
-        if (otp === '123' || otp === '123456') {
+        // Accept any OTP for PoC to prevent "Invalid OTP" errors during demo
+        if (otp && otp.trim().length > 0) {
             const mockUser = {
                 id: 'user_12345',
                 phoneNumber: phoneNumber,
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
             return true;
         } else {
-            throw new Error('Invalid OTP');
+            throw new Error('Please enter an OTP');
         }
     };
 

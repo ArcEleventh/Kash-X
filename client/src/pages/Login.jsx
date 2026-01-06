@@ -45,7 +45,8 @@ const Login = () => {
             await login(phoneNumber, otp);
             navigate('/');
         } catch (err) {
-            setError('Invalid OTP or login failed');
+            console.error("Login verification failed:", err);
+            setError(err.message || 'Login failed. Please try again.');
         } finally {
             setLoading(false);
         }
