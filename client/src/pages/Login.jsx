@@ -43,7 +43,8 @@ const Login = () => {
 
         try {
             await login(phoneNumber, otp);
-            navigate('/');
+            // Force reload to ensure state persistence and avoid race conditions
+            window.location.href = '/';
         } catch (err) {
             console.error("Login verification failed:", err);
             setError(err.message || 'Login failed. Please try again.');
@@ -131,6 +132,9 @@ const Login = () => {
                         </button>
                     </form>
                 )}
+                <div className="mt-8 text-center text-xs text-slate-600 font-mono">
+                    v1.2 (Client-Side Fix)
+                </div>
             </div>
         </div>
     );
