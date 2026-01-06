@@ -1,8 +1,4 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
-
-// Configure API base URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const AuthContext = createContext(null);
 
@@ -11,27 +7,18 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [loading, setLoading] = useState(true);
 
-    // Configure global axios defaults
-    if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
-
     useEffect(() => {
         // Check if user is logged in (verify token)
         const checkAuth = async () => {
-            if (token) {
-                try {
-                    // In a real app, verify token with backend
-                    // const res = await axios.get('/api/auth/me');
-                    // setUser(res.data);
+            const storedUser = localStorage.getItem('user');
+            const storedToken = localStorage.getItem('token');
 
-                    // For now, simpler state restoration if we have a token
-                    const storedUser = localStorage.getItem('user');
-                    if (storedUser) {
-                        setUser(JSON.parse(storedUser));
-                    }
+            if (storedUser && storedToken) {
+                try {
+                    setUser(JSON.parse(storedUser));
+                    setToken(storedToken);
                 } catch (error) {
-                    console.error("Auth check failed", error);
+                    console.error("Failed to parse stored user", error);
                     logout();
                 }
             }
@@ -39,28 +26,31 @@ export const AuthProvider = ({ children }) => {
         };
 
         checkAuth();
-    }, [token]);
+    }, []);
 
     const login = async (phoneNumber, otp) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/auth/verify-otp`, {
-                phoneNumber,
-                otp
-            });
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 800));
 
-            const { token: newToken, user: userData } = response.data;
+        // Mock Verification
+        if (otp === '123' || otp === '123456') {
+            const mockUser = {
+                id: 'user_12345',
+                phoneNumber: phoneNumber,
+                name: 'Test User'
+            };
 
-            localStorage.setItem('token', newToken);
-            localStorage.setItem('user', JSON.stringify(userData));
+            const mockToken = 'mock_jwt_token_' + Date.now();
 
-            setToken(newToken);
-            setUser(userData);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+            localStorage.setItem('token', mockToken);
+            localStorage.setItem('user', JSON.stringify(mockUser));
+
+            setToken(mockToken);
+            setUser(mockUser);
 
             return true;
-        } catch (error) {
-            console.error("Login failed", error);
-            throw error;
+        } else {
+            throw new Error('Invalid OTP');
         }
     };
 
@@ -69,7 +59,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
         setToken(null);
         setUser(null);
-        delete axios.defaults.headers.common['Authorization'];
     };
 
     return (

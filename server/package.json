@@ -2,6 +2,9 @@
   "name": "kash-x-server",
   "version": "1.0.0",
   "description": "Backend for Kash X Stellar PoC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",

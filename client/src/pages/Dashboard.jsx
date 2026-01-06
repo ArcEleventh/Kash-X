@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Wallet, ArrowUpRight, ArrowDownLeft, RefreshCw } from 'lucide-react';
 
 const AssetCard = ({ code, balance, valueUsd, color }) => (
